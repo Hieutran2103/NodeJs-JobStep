@@ -10,7 +10,15 @@ const register = async (req, res, next) => {
   }
   const user = await UserSchema.create({ ...req.body });
   const token = user.createJWT();
-  res.status(StatusCodes.CREATED).json({ user: { name: user.name }, token });
+  res.status(StatusCodes.CREATED).json({
+    user: {
+      email: user.email,
+      lastName: user.lastName,
+      location: user.location,
+      name: user.name,
+      token,
+    },
+  });
 };
 
 const login = async (req, res, next) => {
@@ -30,7 +38,20 @@ const login = async (req, res, next) => {
   }
 
   const token = user.createJWT();
-  res.status(StatusCodes.OK).json({ user: { name: user.name }, token });
+  res.status(StatusCodes.CREATED).json({
+    user: {
+      email: user.email,
+      lastName: user.lastName,
+      location: user.location,
+      name: user.name,
+      token,
+    },
+  });
 };
 
-module.exports = { register, login };
+const updateUser = async (req, res, next) => {
+  console.log(req.user);
+  console.log(req.body);
+};
+
+module.exports = { register, login, updateUser };
