@@ -50,8 +50,28 @@ const login = async (req, res, next) => {
 };
 
 const updateUser = async (req, res, next) => {
-  console.log(req.user);
-  console.log(req.body);
+  const {
+    body: { name, email, lastName, location },
+    user: { userID },
+  } = req;
+
+  if (name === "" || email === "" || lastName === "" || location === "") {
+    throw new BadRequestError(" Please provide all values");
+  }
+  const user = await UserSchema.findByIdAndUpdate({ _id: userID }, req.body, {
+    new: true,
+    runValidators: true,
+  });
+  const token = user.createJWT();
+  res.status(StatusCodes.OK).json({
+    user: {
+      email: user.email,
+      lastName: user.lastName,
+      location: user.location,
+      name: user.name,
+      token,
+    },
+  });
 };
 
 module.exports = { register, login, updateUser };

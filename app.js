@@ -17,16 +17,15 @@ const errorHandlerMiddleware = require("./middleware/error-handler");
 // extra security packages
 
 const helmet = require("helmet");
+const cors = require("cors");
 const xss = require("xss-clean");
+const corsOptions = {
+  origin: "*",
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(helmet());
 app.use(xss());
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*"); // hoặc thay bằng địa chỉ domain cụ thể của bạn
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE");
-  res.header("Access-Control-Allow-Headers", "Content-Type");
-  next();
-});
 // routes
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/jobs", authenticate, jobsRoute);
